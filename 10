@@ -1,0 +1,97 @@
+import collections
+adj_list = {
+    'A': ['B', 'D', 'E'],
+    'B': ['A', 'C'],
+    'C': ['B', 'D'],
+    'D': ['A', 'C', 'F'],
+    'E': ['A', 'F'],
+    'F': ['D', 'E']
+}
+locations = ['A', 'B', 'C', 'D', 'E', 'F']
+adj_matrix = [
+    [0, 1, 0, 1, 1, 0],
+    [1, 0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0],
+    [1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1],
+    [0, 0, 0, 1, 1, 0]
+]
+
+def bfs(graph, start_node):
+    visited = set()
+    queue = collections.deque([start_node])
+    traversal_sequence = []
+    
+    visited.add(start_node)
+    
+    while queue:
+        node = queue.popleft()
+        traversal_sequence.append(node)
+        
+        for neighbor in sorted(graph[node]):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                
+    return traversal_sequence
+
+def dfs_matrix(matrix, nodes, start_node):
+    num_nodes = len(nodes)
+    visited = [False] * num_nodes
+    stack = [start_node]
+    
+    node_to_index = {node: i for i, node in enumerate(nodes)}
+    start_index = node_to_index[start_node]
+    
+    visited[start_index] = True
+    traversal_sequence = [start_node]
+
+    def dfs_recursive(current_node_name):
+        current_index = node_to_index[current_node_name]
+        
+        for i in range(num_nodes):
+            if matrix[current_index][i] == 1 and not visited[i]:
+                neighbor_node_name = nodes[i]
+                
+                visited[i] = True
+                traversal_sequence.append(neighbor_node_name)
+                
+                dfs_recursive(neighbor_node_name)
+
+    dfs_recursive(start_node)
+    return traversal_sequence
+
+def run_traversals():
+    start_location = 'A'
+    
+    while True:
+        print("\n===== City Graph Traversal =====")
+        print("Starting Location:", start_location)
+        print("1. Find sequence using BFS (Adjacency List)")
+        print("2. Find sequence using DFS (Adjacency Matrix)")
+        print("3. Exit")
+        print("----------------------------------")
+        
+        try:
+            choice = input("Enter choice (1, 2, or 3): ").strip()
+        except EOFError:
+            break
+        
+        if choice == '1':
+            sequence = bfs(adj_list, start_location)
+            print("\nSequence (BFS - Layer by Layer):")
+            print(" -> ".join(sequence))
+            
+        elif choice == '2':
+            sequence = dfs_matrix(adj_matrix, locations, start_location)
+            print("\nSequence (DFS - Deepest First):")
+            print(" -> ".join(sequence))
+            
+        elif choice == '3':
+            print("\nExiting program.")
+            break
+            
+        else:
+            print("\nInvalid choice. Please enter 1, 2, or 3.")
+if __name__ == "__main__":
+    run_traversals()
