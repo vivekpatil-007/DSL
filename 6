@@ -1,0 +1,52 @@
+call_queue = []
+def add_call(cust_ID, callTime):
+    call = {"customerID": cust_ID, "callTime": callTime}
+    call_queue.append(call)
+    print(f"Call from Customer {cust_ID} and Call Time: {callTime} min added to the queue.")        
+def answerCall():
+    if isQueueEmpty():
+        print("No calls to answer.")
+    else:
+        call = call_queue.pop(0)
+        print(f"Answering call from Customer {call['customerID']} (Call Time: {call['callTime']} min).")
+def viewQueue():
+    if isQueueEmpty():
+        print("The queue is empty.")
+    else:
+        print("Current Calls in Queue:")
+        for i, call in enumerate(call_queue, 1):
+            print(f"{i}. Customer {call['customerID']} - Call Time: {call['callTime']} min")
+def isQueueEmpty():
+    return not call_queue
+
+def menu():
+    while True:
+        print("1 - Add call")
+        print("2 - Answer the call")
+        print("3 - View the call list")
+        print("4 - Check if queue is empty")
+        print("5 - Exit")
+        choice = input("Enter the number of the operation you wanna perform: ")
+
+        if choice == "1":
+            try:
+                cust_ID = input("Enter the customer ID: ")
+                callTime = int(input("Enter the call time in minutes: "))
+                add_call(cust_ID, callTime)
+            except ValueError:
+                print("Invalid input! Please enter numeric value for call time.")   
+        elif choice == "2":
+            answerCall()
+        elif choice == "3":
+            viewQueue()   
+        elif choice == "4":
+            if isQueueEmpty():
+                print("The call queue is empty.")
+            else:
+                print("The call queue is not empty.")         
+        elif choice == "5":
+            print("Exiting the call center system. Goodbye!")
+            break
+        else:
+            print("Invalid input....!")
+menu()
