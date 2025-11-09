@@ -1,0 +1,96 @@
+from statistics import mode, StatisticsError
+class Library:
+    def __init__(self):
+        self.members = {}  
+        self.books = {}    
+
+    def add_member(self, name, borrow_count):
+        self.members[name] = borrow_count
+        print(f"Member '{name}' added with {borrow_count} borrowings.")
+
+    def add_book(self, title, borrow_count):
+        self.books[title] = borrow_count
+        print(f"Book '{title}' added with {borrow_count} borrowings.")
+
+    def average_borrowed(self):
+        if not self.members:
+            print("No members available.")
+            return
+        avg = sum(self.members.values()) / len(self.members)
+        print(f"Average number of books borrowed: {avg:.2f}")
+
+    def highest_lowest_borrowed(self):
+        if not self.books:
+            print("No books available.")
+            return
+        max_book = max(self.books, key=self.books.get)
+        min_book = min(self.books, key=self.books.get)
+        print(f"Highest borrowed book: '{max_book}' ")
+        print(f"Lowest borrowed book: '{min_book}'")
+
+    def zero_borrow_members(self):
+        count = sum(1 for b in self.members.values() if b == 0)
+        print(f"Number of members with 0 borrowings: {count}")
+
+    def most_frequent_borrowed(self):
+        if not self.books:
+            print("No books available.")
+            return
+        try:
+            borrow_counts = list(self.books.values())
+            most_common_count = mode(borrow_counts)
+
+            most_common_books = [title for title, count in self.books.items() if count == most_common_count]
+            print(f"Most frequently borrowed count: {most_common_count}")
+            print("Books with this count:", ", ".join(most_common_books))
+        except StatisticsError:
+            print("No unique mode found (multiple borrow counts have same frequency).")
+
+    def display_records(self):
+        print("\n--- Library Records ---")
+        print("Members and borrowings:")
+        for name, count in self.members.items():
+            print(f"  {name}: {count}")
+        print("\nBooks and borrowings:")
+        for title, count in self.books.items():
+            print(f"  {title}: {count}")
+        print("------------------------\n")
+
+def main():
+    lib = Library()
+    while True:
+        print("\nMenu:")
+        print("1. Add Member")
+        print("2. Add Book")
+        print("3. Compute Average Books Borrowed (Members)")
+        print("4. Find Book with Highest & Lowest Borrowings")
+        print("5. Count Members with Zero Borrowings")
+        print("6. Display Most Frequently Borrowed Book (Mode)")
+        print("7. Display All Records")
+        print("8. Exit")
+        choice = input("Enter your choice (1-8): ")
+        if choice == '1':
+            name = input("Enter member name: ")
+            borrow = int(input("Enter number of books borrowed: "))
+            lib.add_member(name, borrow)
+        elif choice == '2':
+            title = input("Enter book title: ")
+            borrow = int(input("Enter number of times borrowed: "))
+            lib.add_book(title, borrow)
+        elif choice == '3':
+            lib.average_borrowed()
+        elif choice == '4':
+            lib.highest_lowest_borrowed()
+        elif choice == '5':
+            lib.zero_borrow_members()
+        elif choice == '6':
+            lib.most_frequent_borrowed()
+        elif choice == '7':
+            lib.display_records()
+        elif choice == '8':
+            print("Exiting program...")
+            break
+        else:
+            print("Invalid choice! Please enter between 1 and 8.")
+if __name__ == "__main__":
+    main()
