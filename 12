@@ -1,0 +1,97 @@
+class Node:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, key):
+        if self.root is None:
+            self.root = Node(key)
+        else:
+            self._insert_recursive(self.root, key)
+
+    def _insert_recursive(self, node, key):
+        if key < node.key:
+            if node.left is None:
+                node.left = Node(key)
+            else:
+                self._insert_recursive(node.left, key)
+        else:
+            if node.right is None:
+                node.right = Node(key)
+            else:
+                self._insert_recursive(node.right, key)
+
+    def search(self, key):
+        return self._search_recursive(self.root, key)
+
+    def _search_recursive(self, node, key):
+        if node is None or node.key == key:
+            return node
+        if key < node.key:
+            return self._search_recursive(node.left, key)
+        return self._search_recursive(node.right, key)
+
+    def delete(self, key):
+        self.root = self._delete_recursive(self.root, key)
+
+    def _min_value_node(self, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def _delete_recursive(self, root, key):
+        if root is None:
+            return root
+
+        if key < root.key:
+            root.left = self._delete_recursive(root.left, key)
+        elif key > root.key:
+            root.right = self._delete_recursive(root.right, key)
+        else:
+            if root.left is None:
+                temp = root.right
+                root = None
+                return temp
+            elif root.right is None:
+                temp = root.left
+                root = None
+                return temp
+
+            temp = self._min_value_node(root.right)
+            root.key = temp.key
+            root.right = self._delete_recursive(root.right, temp.key)
+        
+        return root
+
+    def display(self):
+        result = []
+        self._inorder_traversal(self.root, result)
+        print(" ".join(map(str, result)))
+
+    def _inorder_traversal(self, node, result):
+        if node:
+            self._inorder_traversal(node.left, result)
+            result.append(node.key)
+            self._inorder_traversal(node.right, result)
+
+bst = BST()
+keys = [50, 30, 20, 40, 70, 60, 80]
+
+for key in keys:
+    bst.insert(key)
+print("Initial BST (In-order):")
+bst.display()
+print("Search 40:", "Found" if bst.search(40) else "Not Found")
+print("Search 99:", "Found" if bst.search(99) else "Not Found")
+bst.delete(20)
+print("After deleting 20:")
+bst.display()
+bst.delete(50)
+print("After deleting 50 (Root):")
+bst.display()
