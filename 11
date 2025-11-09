@@ -1,0 +1,70 @@
+import heapq
+
+def dijkstra(graph, start):
+    shortest_time = {node: float('inf') for node in graph}
+    shortest_time[start] = 0
+    pq = [(0, start)]
+    
+    while pq:
+        current_time, current_node = heapq.heappop(pq)
+        
+        if current_time > shortest_time[current_node]:
+            continue
+        
+        for neighbor, time in graph[current_node]:
+            new_time = current_time + time
+            if new_time < shortest_time[neighbor]:
+                shortest_time[neighbor] = new_time
+                heapq.heappush(pq, (new_time, neighbor))
+    
+    return shortest_time
+import heapq
+
+def dijkstra(graph, start):
+    shortest_time = {node: float('inf') for node in graph}
+    shortest_time[start] = 0
+    pq = [(0, start)]
+    
+    while pq:
+        current_time, current_node = heapq.heappop(pq)
+        
+        if current_time > shortest_time[current_node]:
+            continue
+        
+        for neighbor, time in graph[current_node]:
+            new_time = current_time + time
+            if new_time < shortest_time[neighbor]:
+                shortest_time[neighbor] = new_time
+                heapq.heappush(pq, (new_time, neighbor))
+    
+    return shortest_time
+
+
+graph = {
+    'A': [('B', 4), ('C', 2)],
+    'B': [('A', 4), ('C', 5), ('D', 10)],
+    'C': [('A', 2), ('B', 5), ('D', 3)],
+    'D': [('B', 10), ('C', 3)]
+}
+
+start = input("Enter starting location: ").upper()
+times = dijkstra(graph, start)
+
+print("\nMinimum time to deliver pizza from location", start)
+for location, time in times.items():
+    print(f"To {location}: {time} minutes")
+
+
+graph = {
+    'A': [('B', 4), ('C', 2)],
+    'B': [('A', 4), ('C', 5), ('D', 10)],
+    'C': [('A', 2), ('B', 5), ('D', 3)],
+    'D': [('B', 10), ('C', 3)]
+}
+
+start = input("Enter starting location: ").upper()
+times = dijkstra(graph, start)
+
+print("\nMinimum time to deliver pizza from location", start)
+for location, time in times.items():
+    print(f"To {location}: {time} minutes")
