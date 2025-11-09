@@ -1,0 +1,156 @@
+class Node:
+    def __init__(self, roll, name, marks): 
+        self.roll = roll
+        self.name = name
+        self.marks = marks
+        self.next = None
+
+class StudentList:
+    def __init__(self):
+        self.head = None
+        
+    def add_record(self, roll, name, marks):
+        new_node = Node(roll, name, marks)
+        
+        temp = self.head
+        while temp:
+            if temp.roll == roll:
+                print(f"Error: A student with Roll No. {roll} already exists.")
+                return
+            temp = temp.next
+
+        if self.head is None:
+            self.head = new_node
+        else:
+            temp = self.head
+            while temp.next is not None:
+                temp = temp.next
+            temp.next = new_node
+        print(f"Record for Roll No. {roll} Added Successfully.")
+        
+    def delete_record(self, roll):
+        prev = None
+        temp = self.head
+        while temp:
+            if temp.roll == roll:
+                if prev:
+                    prev.next = temp.next
+                else:
+                    self.head = temp.next
+                print(f"Student Roll No. {roll} deleted.")  
+                return
+            prev = temp
+            temp = temp.next
+        print(f"Student Roll No. {roll} not found.")
+        
+    def update_record(self, roll, new_name, new_marks):
+        temp = self.head
+        while temp is not None:
+            if temp.roll == roll:
+                temp.name = new_name
+                temp.marks = new_marks
+                print(f"Record for Roll No. {roll} Updated.")
+                return
+            temp = temp.next
+        print(f"Record for Roll No. {roll} Not Found.")
+
+    def search_record(self, roll):
+        temp = self.head
+        while temp is not None:
+            if temp.roll == roll:
+                print("\n--- Search Result ---")
+                print(f" Found: Roll={temp.roll}, Name={temp.name}, Marks={temp.marks}")
+                return
+            temp = temp.next
+        print(f"Record for Roll No. {roll} Not Found.")
+
+    def sort_records(self):
+        if self.head is None:
+            print("No Records to sort.")
+            return
+            
+        students = []
+        temp = self.head
+        while temp:
+            student = {"roll": temp.roll, "name": temp.name, "marks": temp.marks}
+            students.append(student)
+            temp = temp.next
+            
+        students.sort(key=lambda x: x["roll"])
+        
+        print("\n--- Sorted Student Records (by Roll No.) ---")
+        for i in students:
+            print(f"Roll: {i['roll']}, Name: {i['name']}, Marks: {i['marks']}")
+            
+    def display(self):
+        if self.head is None:
+            print("No Records Found.")
+            return
+        temp = self.head
+        print("\n--- Current Student Records ---")
+        while temp is not None:
+            print(f"Roll: {temp.roll}, Name: {temp.name}, Marks: {temp.marks}")
+            temp = temp.next
+            
+if __name__ == "__main__":  
+    sl = StudentList()
+    while True:
+        print("\n=====  Student Record Management System (Linked List) =====")
+        print("1. Add Record")
+        print("2. Delete Record")
+        print("3. Update Record")
+        print("4. Search Record")
+        print("5. Sort Records by Roll Number")
+        print("6. Display Records")
+        print("7. Exit")
+        
+        try:
+            choice = int(input("Enter choice: "))
+        except ValueError:
+            print(" Please enter a valid number (1-7).")
+            continue
+            
+        if choice == 1:
+            try:
+                roll = int(input("Enter Roll No: "))
+                name = input("Enter Name: ")
+                marks = float(input("Enter Marks: "))
+                sl.add_record(roll, name, marks)
+            except ValueError:
+                print(" Invalid input. Roll No must be an integer and Marks must be a number.")
+
+        elif choice == 2:
+            try:
+                roll = int(input("Enter Roll No to Delete: "))
+                sl.delete_record(roll)
+            except ValueError:
+                print(" Invalid input. Roll No must be an integer.")
+
+        elif choice == 3:
+            try:
+                roll = int(input("Enter Roll No to Update: "))
+                name = input("Enter New Name: ")
+                marks = float(input("Enter New Marks: "))
+                sl.update_record(roll, name, marks)
+            except ValueError:
+                print("Invalid input. Roll No must be an integer and Marks must be a number.")
+                
+        elif choice == 4:
+            try:
+                roll = int(input("Enter Roll No to Search: "))
+                sl.search_record(roll)
+            except ValueError:
+                print("Invalid input. Roll No must be an integer.")
+                
+        elif choice == 5:
+            sl.sort_records()
+            
+        elif choice == 6:
+            sl.display()
+            
+        elif choice == 7:
+            print("Exiting system... Goodbye!")
+            break
+            
+        else:
+            print(" Invalid Choice! Please enter a number between 1 and 7.")
